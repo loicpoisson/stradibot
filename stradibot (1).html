@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stradibot — CS225A Stanford</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300;1,8..60,400&family=Source+Sans+3:wght@300;400;500;600&family=Source+Code+Pro:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cardinal:    #8C1515;
+  --cardinal-dk: #651010;
+  --cardinal-lt: #B83A3A;
+  --palo-alto:   #175E54; /* Stanford Palo Alto green — secondary */
+  --sand:        #F4F0E8;
+  --sandstone:   #d9d1bb;
+  --white:       #ffffff;
+  --ink:         #1a1410;
+  --gray:        #544948;
+  --gray-lt:     #8a7f78;
+  --rule:        rgba(140,21,21,0.15);
+}
+
+html { scroll-behavior: smooth; }
+body {
+  background: var(--white);
+  color: var(--ink);
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 300;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+/* ══ NAV ══ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  background: var(--cardinal);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 3rem;
+  height: 56px;
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 1rem;
+}
+.nav-wordmark {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.15rem;
+  font-weight: 400;
+  color: var(--white);
+  letter-spacing: 0.01em;
+}
+.nav-course {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+  border-left: 1px solid rgba(255,255,255,0.25);
+  padding-left: 1rem;
+}
+.nav-links { display: flex; gap: 0; list-style: none; }
+.nav-links a {
+  display: block;
+  padding: 0 1.1rem;
+  height: 56px; line-height: 56px;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  border-bottom: 2px solid transparent;
+}
+.nav-links a:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--white);
+  border-bottom-color: var(--white);
+}
+.nav-links a.cta {
+  background: rgba(255,255,255,0.15);
+  color: var(--white);
+  margin-left: 0.5rem;
+  border-left: 1px solid rgba(255,255,255,0.2);
+}
+.nav-links a.cta:hover { background: rgba(255,255,255,0.25); }
+
+/* ══ HERO ══ */
+.hero {
+  margin-top: 56px;
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  min-height: calc(100vh - 56px);
+  border-bottom: 1px solid var(--rule);
+}
+.hero-left {
+  padding: 6rem 5rem;
+  display: flex; flex-direction: column; justify-content: center;
+  border-right: 1px solid var(--rule);
+}
+.hero-eyebrow {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1rem, 1.8vw, 1.4rem);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  color: var(--cardinal);
+  margin-bottom: 1.8rem;
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.hero-eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 28px; height: 2px;
+  background: var(--cardinal);
+  flex-shrink: 0;
+}
+h1 {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(3.5rem, 6.5vw, 6rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  margin-bottom: 1.8rem;
+}
+h1 strong {
+  font-weight: 600;
+  color: var(--cardinal);
+}
+.hero-desc {
+  font-size: 1.05rem;
+  font-weight: 300;
+  color: var(--gray);
+  max-width: 46ch;
+  line-height: 1.75;
+  margin-bottom: 2.5rem;
+  border-left: 3px solid var(--cardinal);
+  padding-left: 1.2rem;
+}
+.hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.45rem;
+  padding: 0.7rem 1.6rem;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: 1.5px solid;
+  transition: all 0.18s;
+  cursor: pointer;
+}
+.btn-cardinal { background: var(--cardinal); color: var(--white); border-color: var(--cardinal); }
+.btn-cardinal:hover { background: var(--cardinal-dk); border-color: var(--cardinal-dk); }
+.btn-outline { background: transparent; color: var(--cardinal); border-color: var(--cardinal); }
+.btn-outline:hover { background: var(--cardinal); color: var(--white); }
+
+.hero-right {
+  background: var(--sand);
+  display: flex; flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 2.5rem;
+  gap: 1.5rem;
+}
+
+/* Stats grid */
+.stats-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--sandstone);
+  border: 1px solid var(--sandstone);
+  width: 100%;
+}
+.stat-cell {
+  background: var(--white);
+  padding: 1.4rem 1.5rem;
+}
+.stat-label {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray-lt);
+  margin-bottom: 0.3rem;
+}
+.stat-value {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  color: var(--ink);
+}
+.stat-value.red { color: var(--cardinal); }
+
+/* Bow animation strip */
+.bow-strip {
+  width: 100%;
+  background: var(--white);
+  border: 1px solid var(--sandstone);
+  padding: 2rem 1.5rem;
+}
+.bow-label {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray-lt);
+  margin-bottom: 1.2rem;
+}
+.strings-viz { position: relative; }
+.string-line {
+  height: 1px;
+  background: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+  opacity: 0.25;
+}
+.string-line:last-child { margin-bottom: 0; }
+.string-label {
+  position: absolute;
+  left: -1.8rem; top: -7px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.6rem;
+  color: var(--gray-lt);
+}
+.bow-cursor {
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  background: var(--cardinal);
+  border-radius: 2px;
+  animation: bow-move 2.4s ease-in-out infinite;
+  transform-origin: top center;
+}
+@keyframes bow-move {
+  0%   { left: 5%;  }
+  50%  { left: 88%; }
+  100% { left: 5%;  }
+}
+.bow-force-bar {
+  margin-top: 1.5rem;
+  height: 3px;
+  background: var(--sandstone);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.bow-force-fill {
+  height: 100%;
+  background: var(--cardinal);
+  width: 40%;
+  animation: force-pulse 2.4s ease-in-out infinite;
+}
+@keyframes force-pulse {
+  0%,100% { width: 35%; opacity: 0.7; }
+  30%      { width: 55%; opacity: 1;   }
+  60%      { width: 40%; opacity: 0.9; }
+}
+.force-readout {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 0.4rem;
+}
+.force-readout span {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.62rem;
+  color: var(--gray-lt);
+}
+.force-readout strong {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.75rem;
+  color: var(--cardinal);
+}
+
+/* ══ GENERIC SECTION ══ */
+section { padding: 5.5rem 5rem; }
+.section-label {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+.section-num {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--cardinal);
+}
+h2 {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 300;
+  line-height: 1.15;
+  margin-bottom: 0.8rem;
+}
+h2 em { font-style: italic; color: var(--cardinal); font-weight: 300; }
+.section-intro {
+  font-size: 1rem;
+  color: var(--gray);
+  max-width: 60ch;
+  margin-bottom: 3rem;
+}
+
+/* ══ HOW IT WORKS ══ */
+.works-bg { background: var(--white); }
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--sandstone);
+  border: 1px solid var(--sandstone);
+}
+.works-card {
+  background: var(--white);
+  padding: 2.5rem 2rem;
+  border-top: 3px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+}
+.works-card:hover {
+  border-top-color: var(--cardinal);
+  background: #fdf9f9;
+}
+.works-icon {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}
+.works-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin-bottom: 0.7rem;
+}
+.works-body {
+  font-size: 0.86rem;
+  color: var(--gray);
+  line-height: 1.72;
+}
+.works-tag {
+  display: inline-block;
+  margin-top: 1.2rem;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cardinal);
+  background: rgba(140,21,21,0.07);
+  padding: 0.2rem 0.6rem;
+}
+
+/* ══ DEMO SECTION ══ */
+.demo-bg { background: var(--sand); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.media-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.media-placeholder {
+  aspect-ratio: 16/9;
+  background: var(--sandstone);
+  border: 2px dashed rgba(140,21,21,0.25);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 0.6rem;
+  color: var(--gray-lt);
+}
+.media-placeholder-icon { font-size: 2.2rem; opacity: 0.4; }
+.media-placeholder-text {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 0 1rem;
+}
+/* Real video embed — swap in the real YouTube ID */
+.video-embed {
+  aspect-ratio: 16/9;
+  background: #000;
+}
+.video-embed iframe {
+  width: 100%; height: 100%; border: none; display: block;
+}
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.8rem;
+}
+.photo-slot {
+  aspect-ratio: 1;
+  background: var(--sandstone);
+  border: 2px dashed rgba(140,21,21,0.2);
+  display: flex; align-items: center; justify-content: center;
+}
+.photo-slot-label {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gray-lt);
+}
+
+/* ══ PIPELINE ══ */
+.pipeline-bg { background: var(--cardinal); color: var(--white); }
+.pipeline-bg h2 { color: var(--white); }
+.pipeline-bg h2 em { color: rgba(255,255,255,0.65); }
+.pipeline-bg .section-num { color: rgba(255,255,255,0.4); }
+.pipeline-bg .section-intro { color: rgba(255,255,255,0.65); }
+
+.pipeline-steps {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.15);
+  position: relative;
+}
+.pipe-step {
+  background: rgba(255,255,255,0.05);
+  padding: 2rem 1.5rem;
+  transition: background 0.2s;
+  position: relative;
+}
+.pipe-step:hover { background: rgba(255,255,255,0.1); }
+.pipe-step::after {
+  content: '→';
+  position: absolute;
+  right: -10px; top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.25);
+  font-size: 0.9rem;
+  z-index: 1;
+}
+.pipe-step:last-child::after { display: none; }
+.pipe-num {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 0.8rem;
+}
+.pipe-name {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+.pipe-desc {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.6;
+}
+
+/* ══ TECH ══ */
+.tech-bg { background: var(--white); }
+.tech-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+.tech-group { }
+.tech-group-title {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cardinal);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.tech-item {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.tech-item:last-child { border-bottom: none; }
+.tech-name { font-size: 0.9rem; font-weight: 400; flex: 1; }
+.tech-note { font-size: 0.78rem; color: var(--gray-lt); flex: 2; }
+.tech-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--cardinal);
+  flex-shrink: 0;
+}
+
+/* ══ FILES ══ */
+.files-bg { background: var(--sand); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.files-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--sandstone);
+  border: 1px solid var(--sandstone);
+}
+.file-card {
+  background: var(--white);
+  padding: 2rem 1.8rem;
+  display: flex; flex-direction: column; gap: 0.6rem;
+  text-decoration: none; color: inherit;
+  transition: background 0.15s;
+  border-top: 3px solid transparent;
+}
+.file-card:hover {
+  background: #fdf9f9;
+  border-top-color: var(--cardinal);
+}
+.file-type {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--cardinal);
+}
+.file-name {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1rem;
+  font-weight: 400;
+}
+.file-desc { font-size: 0.82rem; color: var(--gray); line-height: 1.6; }
+.file-link {
+  margin-top: auto;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cardinal);
+}
+
+/* ══ TEAM ══ */
+.team-bg { background: var(--white); }
+.team-header-row {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 3rem;
+  flex-wrap: wrap; gap: 1rem;
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+.team-card {
+  border: 1px solid var(--sandstone);
+  padding: 1.8rem 1.5rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.team-card:hover {
+  border-color: var(--cardinal);
+  box-shadow: 0 4px 20px rgba(140,21,21,0.08);
+}
+.team-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--cardinal);
+  color: var(--white);
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.1rem;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 1rem;
+}
+.team-name {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-bottom: 0.2rem;
+}
+.team-role {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gray-lt);
+  margin-bottom: 0.8rem;
+}
+.team-links { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.4rem; }
+.team-email {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.65rem;
+  color: var(--cardinal);
+  text-decoration: none;
+  word-break: break-all;
+  transition: opacity 0.15s;
+}
+.team-email:hover { opacity: 0.75; }
+.team-linkedin {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.65rem;
+  color: var(--gray-lt);
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: color 0.15s;
+}
+.team-linkedin:hover { color: var(--cardinal); }
+
+/* TA card */
+.ta-card {
+  border: 1px solid var(--sandstone);
+  padding: 1.5rem 2rem;
+  display: flex; align-items: center; gap: 1.5rem;
+  background: var(--sand);
+}
+.ta-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--palo-alto);
+  color: var(--white);
+  font-family: 'Source Serif 4', serif;
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.ta-label {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--palo-alto);
+  margin-bottom: 0.2rem;
+}
+.ta-name {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+/* ══ FOOTER ══ */
+footer {
+  background: var(--cardinal-dk);
+  color: rgba(255,255,255,0.7);
+  padding: 3rem 5rem;
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 2rem;
+}
+.footer-col-title {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 1rem;
+}
+.footer-col p {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  margin-bottom: 0.4rem;
+}
+.footer-col a {
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 0.3rem;
+  transition: color 0.15s;
+}
+.footer-col a:hover { color: var(--white); }
+.footer-bottom {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1rem;
+}
+.footer-logo {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.1rem;
+  color: var(--white);
+  font-weight: 400;
+}
+.footer-copy {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.35);
+}
+
+/* ══ DIVIDER ══ */
+.rule { height: 1px; background: var(--rule); }
+
+/* ══ FADE IN ══ */
+.fade-in { opacity: 0; transform: translateY(18px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.fade-in.visible { opacity: 1; transform: none; }
+
+/* ══ RESPONSIVE ══ */
+@media (max-width: 1000px) {
+  .hero { grid-template-columns: 1fr; }
+  .hero-right { display: none; }
+  nav { padding: 0 1.5rem; }
+  .nav-links a { padding: 0 0.8rem; font-size: 0.72rem; }
+  section { padding: 4rem 2rem; }
+  .works-grid { grid-template-columns: 1fr 1fr; }
+  .team-grid { grid-template-columns: 1fr 1fr; }
+  .pipeline-steps { grid-template-columns: repeat(3, 1fr); }
+  .tech-columns { grid-template-columns: 1fr; }
+  .files-grid { grid-template-columns: 1fr 1fr; }
+  footer { padding: 3rem 2rem; }
+  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
+  .media-grid { grid-template-columns: 1fr; }
+  .photo-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .works-grid, .files-grid, .pipeline-steps { grid-template-columns: 1fr; }
+  .team-grid { grid-template-columns: 1fr; }
+  .nav-course { display: none; }
+  h1 { font-size: 3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <div class="nav-brand">
+    <span class="nav-wordmark">Stradibot</span>
+    <span class="nav-course">CS225A · Stanford Jun 2026</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#pipeline">System</a></li>
+    <li><a href="#files">Files</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="https://github.com/Anna-Masset/stradibot" target="_blank" class="cta">GitHub ↗</a></li>
+  </ul>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="about">
+  <div class="hero-left">
+    <div class="hero-eyebrow"><a href="https://web.stanford.edu/class/cs225a/" target="_blank" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(140,21,21,0.35);">CS225A · Experimental Robotics</a> · Stanford University · Jun 2026</div>
+    <h1>A robot<br>that plays<br>the <strong>violin.</strong></h1>
+    <p class="hero-desc">
+      Stradibot is a 7-DOF Flexiv robotic arm performing live violin music using
+      operational space control, force-controlled bowing, solenoid fingering,
+      and real-time MIDI playback — all coordinated by a finite state machine at 1 kHz.
+    </p>
+    <div class="hero-actions">
+      <a href="#demo" class="btn btn-cardinal">Watch demo</a>
+      <a href="https://github.com/Anna-Masset/stradibot" class="btn btn-outline" target="_blank">View code ↗</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-label">Robot</div>
+        <div class="stat-value">Flexiv Rizon 4</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Control loop</div>
+        <div class="stat-value red">1 000 Hz</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Strings</div>
+        <div class="stat-value">4 · G D A E</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Frets (solenoids)</div>
+        <div class="stat-value red">8</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Max bow speed</div>
+        <div class="stat-value">0.5 m/s</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-label">Max bow force</div>
+        <div class="stat-value red">3 N</div>
+      </div>
+    </div>
+    <div class="bow-strip">
+      <div class="bow-label">Live bow position &amp; contact force</div>
+      <div class="strings-viz" style="padding-left:2rem; height: 74px;">
+        <div class="string-line"><span class="string-label">E5</span></div>
+        <div class="string-line"><span class="string-label">A4</span></div>
+        <div class="string-line"><span class="string-label">D4</span></div>
+        <div class="string-line"><span class="string-label">G3</span></div>
+        <div class="bow-cursor" style="height:74px; top:0;"></div>
+      </div>
+      <div class="bow-force-bar"><div class="bow-force-fill"></div></div>
+      <div class="force-readout">
+        <span>Contact force (normal)</span>
+        <strong>~1.8 N</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══ HOW IT WORKS ══ -->
+<section class="works-bg" id="works">
+  <div class="section-label fade-in"><span class="section-num">01</span></div>
+  <h2 class="fade-in">How it <em>works</em></h2>
+  <p class="section-intro fade-in">Six subsystems work in concert to produce music from a standard MIDI file.</p>
+  <div class="works-grid">
+    <div class="works-card fade-in" style="transition-delay:0.0s">
+      <span class="works-icon">♩</span>
+      <div class="works-title">MIDI Parsing</div>
+      <p class="works-body">A custom C++ parser reads standard .mid files, builds a tempo map, maps each note to a violin string (G3–E5) and fret (0–8), and converts MIDI ticks to real-time seconds.</p>
+      <span class="works-tag">C++ · MIDI</span>
+    </div>
+    <div class="works-card fade-in" style="transition-delay:0.12s">
+      <span class="works-icon">⚡</span>
+      <div class="works-title">Solenoid Fingering</div>
+      <p class="works-body">8 solenoid bars press all 4 strings simultaneously at the correct fret. Serial commands are sent over USB at 115 200 baud to an Arduino that drives the solenoids in real time.</p>
+      <span class="works-tag">Arduino · Serial</span>
+    </div>
+    <div class="works-card fade-in" style="transition-delay:0.24s">
+      <span class="works-icon">↔</span>
+      <div class="works-title">Force-Controlled Bowing</div>
+      <p class="works-body">The end-effector moves along the bow axis while a force controller maintains a set contact normal to the string. Bow speed and force are tunable at runtime via Redis keys.</p>
+      <span class="works-tag">SAI2 · Eigen · Redis</span>
+    </div>
+    <div class="works-card fade-in" style="transition-delay:0.36s">
+      <span class="works-icon">⬆</span>
+      <div class="works-title">String Transitions</div>
+      <p class="works-body">Adjacent strings use a direct lateral move. Non-adjacent changes trigger a lift → lateral → lower trajectory, avoiding collisions with intervening strings during playback.</p>
+      <span class="works-tag">Motion Planning · FSM</span>
+    </div>
+    <div class="works-card fade-in" style="transition-delay:0.48s">
+      <span class="works-icon">⟳</span>
+      <div class="works-title">Finite State Machine</div>
+      <p class="works-body">A 9-state FSM (CALIBRATION → LOAD_MIDI → IDLE → SET_FRET → MOVE_TO_STRING → BOW_NOTE → NEXT_NOTE → WAIT_SILENCE → END) coordinates all subsystems with safety timeouts.</p>
+      <span class="works-tag">C++ · Control</span>
+    </div>
+    <div class="works-card fade-in" style="transition-delay:0.60s">
+      <span class="works-icon">◎</span>
+      <div class="works-title">Bow Contact Estimation</div>
+      <p class="works-body">A Kalman filter (Python) estimates the bow–string contact state in real time from force sensor readings, enabling adaptive force control during sustained notes.</p>
+      <span class="works-tag">Python · Kalman Filter</span>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══ DEMO ══ -->
+<section class="demo-bg" id="demo">
+  <div class="section-label fade-in"><span class="section-num">02</span></div>
+  <h2 class="fade-in">Demo &amp; <em>media</em></h2>
+  <p class="section-intro fade-in">Recordings of the robot performing MIDI-driven violin playback in the Stanford robotics lab.</p>
+
+  <!-- VIDEO — replace YOUR_VIDEO_ID with a real YouTube ID, or swap for a Drive embed -->
+  <div class="media-grid fade-in">
+    <div class="media-placeholder">
+      <div class="media-placeholder-icon">▶</div>
+      <div class="media-placeholder-text">Demo video<br>Upload to YouTube &amp; paste embed URL here</div>
+    </div>
+    <div class="media-placeholder">
+      <div class="media-placeholder-icon">▶</div>
+      <div class="media-placeholder-text">Second clip<br>String transitions / solenoid demo</div>
+    </div>
+  </div>
+  <!-- To enable: replace the <div class="media-placeholder"> above with:
+  <div class="video-embed"><iframe src="https://www.youtube.com/embed/YOUR_ID" allowfullscreen></iframe></div>
+  -->
+
+  <p style="font-family:'Source Code Pro',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--gray-lt);margin:2rem 0 1rem;">Photos</p>
+  <div class="photo-grid fade-in">
+    <div class="photo-slot"><span class="photo-slot-label">Robot setup</span></div>
+    <div class="photo-slot"><span class="photo-slot-label">Bow detail</span></div>
+    <div class="photo-slot"><span class="photo-slot-label">Solenoids</span></div>
+    <div class="photo-slot"><span class="photo-slot-label">Team</span></div>
+  </div>
+  <!-- Replace each .photo-slot with <img src="your-image.jpg" style="width:100%;aspect-ratio:1;object-fit:cover;"> -->
+</section>
+
+<div class="rule"></div>
+
+<!-- ══ PIPELINE ══ -->
+<section class="pipeline-bg" id="pipeline">
+  <div class="section-label fade-in"><span class="section-num">03</span></div>
+  <h2 class="fade-in">System <em>pipeline</em></h2>
+  <p class="section-intro fade-in">From MIDI file to sound, every step runs in the same 1 kHz control loop.</p>
+  <div class="pipeline-steps">
+    <div class="pipe-step fade-in" style="transition-delay:0.0s">
+      <div class="pipe-num">01</div>
+      <div class="pipe-name">MIDI file</div>
+      <p class="pipe-desc">Standard .mid parsed note-by-note with full tempo map and VLQ tick resolution</p>
+    </div>
+    <div class="pipe-step fade-in" style="transition-delay:0.1s">
+      <div class="pipe-num">02</div>
+      <div class="pipe-name">FSM dispatcher</div>
+      <p class="pipe-desc">9-state machine coordinates calibration, fret setting, string moves and bowing</p>
+    </div>
+    <div class="pipe-step fade-in" style="transition-delay:0.2s">
+      <div class="pipe-num">03</div>
+      <div class="pipe-name">Redis bus</div>
+      <p class="pipe-desc">Real-time shared state: joint angles, bow force &amp; speed, keyboard input</p>
+    </div>
+    <div class="pipe-step fade-in" style="transition-delay:0.3s">
+      <div class="pipe-num">04</div>
+      <div class="pipe-name">SAI2 tasks</div>
+      <p class="pipe-desc">MotionForceTask + JointTask compute torques via operational space control</p>
+    </div>
+    <div class="pipe-step fade-in" style="transition-delay:0.4s">
+      <div class="pipe-num">05</div>
+      <div class="pipe-name">Flexiv arm</div>
+      <p class="pipe-desc">7-DOF robot executes bowing trajectory with force feedback at the string</p>
+    </div>
+    <div class="pipe-step fade-in" style="transition-delay:0.5s">
+      <div class="pipe-num">06</div>
+      <div class="pipe-name">Arduino</div>
+      <p class="pipe-desc">Solenoid driver selects fret 0–8 in sync with each incoming MIDI note event</p>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══ TECH STACK ══ -->
+<section class="tech-bg" id="tech">
+  <div class="section-label fade-in"><span class="section-num">04</span></div>
+  <h2 class="fade-in">Tech <em>stack</em></h2>
+  <p class="section-intro fade-in">72% C++ / 27% Python — built on the SAI2 robotics framework from Stanford's CHARM Lab.</p>
+  <div class="tech-columns fade-in">
+    <div class="tech-group">
+      <div class="tech-group-title">Core software</div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">C++ (C++17)</span><span class="tech-note">Controller, FSM, MIDI parser, simviz</span></div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">Python 3</span><span class="tech-note">Bow contact Kalman filter</span></div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">SAI2 / SAI Primitives</span><span class="tech-note">MotionForceTask, JointTask, operational space</span></div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">Eigen</span><span class="tech-note">Matrix math, pose, trajectory</span></div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">Redis</span><span class="tech-note">Real-time shared state & runtime parameter tuning</span></div>
+    </div>
+    <div class="tech-group">
+      <div class="tech-group-title">Hardware &amp; tooling</div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">Flexiv Rizon 4</span><span class="tech-note">7-DOF collaborative robot arm</span></div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">Arduino</span><span class="tech-note">Solenoid driver, 115 200 baud serial</span></div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">URDF / SDF</span><span class="tech-note">Flexiv violin robot model (urdf_models/)</span></div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">CMake</span><span class="tech-note">Cross-platform build system</span></div>
+      <div class="tech-item"><div class="tech-dot"></div><span class="tech-name">Standard MIDI</span><span class="tech-note">Input format — any .mid file playable</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══ FILES ══ -->
+<section class="files-bg" id="files">
+  <div class="section-label fade-in"><span class="section-num">05</span></div>
+  <h2 class="fade-in">Files &amp; <em>resources</em></h2>
+  <p class="section-intro fade-in">All source code, CAD models, and MIDI files are hosted on GitHub.</p>
+  <div class="files-grid fade-in">
+    <a class="file-card" href="https://github.com/Anna-Masset/stradibot/blob/main/controller.cpp" target="_blank">
+      <span class="file-type">C++ · 1092 lines</span>
+      <div class="file-name">controller.cpp</div>
+      <p class="file-desc">Main controller — MIDI FSM, bowing motion, string transitions, calibration, Arduino serial.</p>
+      <span class="file-link">View on GitHub ↗</span>
+    </a>
+    <a class="file-card" href="https://github.com/Anna-Masset/stradibot/blob/main/bow_contact_kf.py" target="_blank">
+      <span class="file-type">Python</span>
+      <div class="file-name">bow_contact_kf.py</div>
+      <p class="file-desc">Kalman filter for real-time bow–string contact state estimation from force sensor data.</p>
+      <span class="file-link">View on GitHub ↗</span>
+    </a>
+    <a class="file-card" href="https://github.com/Anna-Masset/stradibot/blob/main/simviz.cpp" target="_blank">
+      <span class="file-type">C++</span>
+      <div class="file-name">simviz.cpp</div>
+      <p class="file-desc">Simulation & visualization loop — runs alongside the controller for real-time rendering.</p>
+      <span class="file-link">View on GitHub ↗</span>
+    </a>
+    <a class="file-card" href="https://github.com/Anna-Masset/stradibot/tree/main/urdf_models" target="_blank">
+      <span class="file-type">URDF · CAD</span>
+      <div class="file-name">urdf_models/</div>
+      <p class="file-desc">Flexiv violin robot URDF model with full kinematic chain. Add SolidWorks / STEP files here.</p>
+      <span class="file-link">View on GitHub ↗</span>
+    </a>
+    <a class="file-card" href="https://github.com/Anna-Masset/stradibot/tree/main/midi_files" target="_blank">
+      <span class="file-type">MIDI</span>
+      <div class="file-name">midi_files/</div>
+      <p class="file-desc">Standard MIDI files used for playback testing. Any .mid file with notes in G3–E5 range will work.</p>
+      <span class="file-link">View on GitHub ↗</span>
+    </a>
+    <a class="file-card" href="https://github.com/Anna-Masset/stradibot/tree/main/arduino" target="_blank">
+      <span class="file-type">Arduino · C</span>
+      <div class="file-name">arduino/</div>
+      <p class="file-desc">Firmware for the solenoid driver board. Receives 1-byte fret commands over serial at 115 200 baud.</p>
+      <span class="file-link">View on GitHub ↗</span>
+    </a>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ══ TEAM ══ -->
+<section class="team-bg" id="team">
+  <div class="section-label fade-in"><span class="section-num">06</span></div>
+  <h2 class="fade-in">The <em>team</em></h2>
+  <p class="section-intro fade-in">Four M.S. students from Stanford's Mechanical Engineering department, course CS225A — Experimental Robotics.</p>
+
+  <div class="team-grid">
+    <div class="team-card fade-in" style="transition-delay:0.0s">
+      <div class="team-avatar">AM</div>
+      <div class="team-name">Anna Masset</div>
+      <div class="team-links">
+        <a class="team-email" href="mailto:amasset@stanford.edu">amasset@stanford.edu</a>
+        <a class="team-linkedin" href="https://www.linkedin.com/in/anna-masset/" target="_blank">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="team-card fade-in" style="transition-delay:0.1s">
+      <div class="team-avatar">LP</div>
+      <div class="team-name">Loïc Poisson</div>
+      <div class="team-links">
+        <a class="team-email" href="mailto:lpoisson@stanford.edu">lpoisson@stanford.edu</a>
+        <a class="team-linkedin" href="https://www.linkedin.com/in/loïc-poisson" target="_blank">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="team-card fade-in" style="transition-delay:0.2s">
+      <div class="team-avatar">JM</div>
+      <div class="team-name">Joana Mizrahi</div>
+      <div class="team-links">
+        <a class="team-email" href="mailto:jmizarhi@stanford.edu">jmizarhi@stanford.edu</a>
+        <a class="team-linkedin" href="https://www.linkedin.com/in/joana-mizrahi-336620300/" target="_blank">LinkedIn ↗</a>
+      </div>
+    </div>
+    <div class="team-card fade-in" style="transition-delay:0.3s">
+      <div class="team-avatar">HG</div>
+      <div class="team-name">Harold Gardon</div>
+      <div class="team-links">
+        <a class="team-email" href="mailto:gardon21@stanford.edu">gardon21@stanford.edu</a>
+        <a class="team-linkedin" href="https://www.linkedin.com/in/harold-gardon/" target="_blank">LinkedIn ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ta-card fade-in">
+    <div class="ta-avatar">EA</div>
+    <div>
+      <div class="ta-label">Teaching Assistant · CS225A</div>
+      <div class="ta-name">Enzo Andreacchio</div>
+      <p style="font-size:0.85rem;color:var(--gray);">Stanford Department of Mechanical Engineering — Experimental Robotics</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-col">
+      <div class="footer-col-title">Project</div>
+      <p>Stradibot — A violin-playing robot arm</p>
+      <p>CS225A Experimental Robotics</p>
+      <p>Stanford University · Jun 2026</p>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Links</div>
+      <a href="https://github.com/Anna-Masset/stradibot" target="_blank">GitHub repository ↗</a>
+      <a href="https://sites.google.com/stanford.edu/cs225a-stradibot" target="_blank">Google Site ↗</a>
+      <a href="https://cs.stanford.edu/groups/manips/" target="_blank">CHARM Lab ↗</a>
+      <a href="https://web.stanford.edu/class/cs225a/" target="_blank">CS225A course page ↗</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Contact</div>
+      <a href="mailto:amasset@stanford.edu">amasset@stanford.edu</a>
+      <a href="mailto:lpoisson@stanford.edu">lpoisson@stanford.edu</a>
+      <a href="mailto:jmizarhi@stanford.edu">jmizarhi@stanford.edu</a>
+      <a href="mailto:gardon21@stanford.edu">gardon21@stanford.edu</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-logo">Stradibot</span>
+    <span class="footer-copy">© 2026 Stanford University · CS225A Experimental Robotics · Built with SAI2</span>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
